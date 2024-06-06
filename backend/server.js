@@ -4,6 +4,7 @@ const scraper = require('./scraper');
 const app = express();
 const PORT = 3000;
 
+// Endpoint para o scraping
 app.get('/api/scrape', async (req, res) => {
     const keyword = req.query.keyword;
     if (!keyword) {
@@ -18,6 +19,7 @@ app.get('/api/scrape', async (req, res) => {
     }
 });
 
+// Iniciar o servidor
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

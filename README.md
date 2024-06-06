@@ -24,7 +24,7 @@ This project allows scraping Amazon product listings from the first page of sear
 
 ### Frontend
 
-1. Open the `frontend/index.html` file in your preferred web browser.
+1. Open `localhost:3000` in your preferred web browser.
 
 ## Usage
 

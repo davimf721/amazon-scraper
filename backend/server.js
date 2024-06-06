@@ -1,39 +1,40 @@
-const axios = require('axios'); // Importing the axios library for making HTTP requests
-const jsdom = require('jsdom'); // Importing the jsdom library for parsing HTML
-const { JSDOM } = jsdom; // Destructuring JSDOM from the jsdom library
+const express = require('express'); // Importing the Express.js framework
+const path = require('path'); // Importing the path module for working with file and directory paths
+const scraper = require('./scraper'); // Importing the scraper module for scraping Amazon
 
-// Function to scrape Amazon for product listings based on a keyword
-async function scrapeAmazon(keyword) {
-    // Constructing the URL for Amazon search with the provided keyword
-    const url = `https://www.amazon.com/s?k=${encodeURIComponent(keyword)}`;
-    // Making a GET request to the Amazon URL and extracting the response data
-    const { data } = await axios.get(url);
-    // Creating a JSDOM object from the HTML response
-    const dom = new JSDOM(data);
-    // Accessing the document object of the JSDOM
-    const document = dom.window.document;
+const app = express(); // Creating an Express application instance
+const PORT = 3000; // Setting the port number for the server to listen on
 
-    // Selecting product elements from the search results
-    const productElements = document.querySelectorAll('.s-main-slot .s-result-item');
-    // Initializing an array to store the extracted product information
-    const products = [];
+// Serving static files from the 'frontend' folder
+app.use(express.static(path.join(__dirname, '../frontend')));
 
-    // Iterating through each product element to extract product details
-    productElements.forEach(productElement => {
-        // Extracting the product title, handling cases where the element may be missing
-        const title = productElement.querySelector('h2 a span')?.textContent || 'No title';
-        // Extracting the product rating, handling cases where the element may be missing
-        const rating = productElement.querySelector('.a-icon-alt')?.textContent || 'No rating';
-        // Extracting the number of reviews, handling cases where the element may be missing
-        const reviews = productElement.querySelector('.a-size-small .a-link-normal')?.textContent || 'No reviews';
-        // Extracting the product image URL, handling cases where the element may be missing
-        const imageUrl = productElement.querySelector('.s-image')?.src || 'No image';
+// Endpoint for scraping Amazon
+app.get('/api/scrape', async (req, res) => {
+    const keyword = req.query.keyword; // Extracting the keyword from the query parameters
+    // Checking if the keyword is provided
+    if (!keyword) {
+        // Sending a 400 Bad Request response if the keyword is missing
+        return res.status(400).json({ error: 'Keyword is required' });
+    }
 
-        // Constructing an object with the extracted product details and pushing it to the products array
-        products.push({ title, rating, reviews, imageUrl });
-    });
+    try {
+        // Scraping Amazon for product listings based on the provided keyword
+        const data = await scraper.scrapeAmazon(keyword);
+        // Sending the scraped data as a JSON response
+        res.json(data);
+    } catch (error) {
+        // Handling any errors that occur during scraping
+        res.status(500).json({ error: error.message });
+    }
+});
 
-    return products; // Returning the array of extracted product information
-}
+// Serving the main HTML page
+app.get('/', (req, res) => {
+    // Sending the main HTML file as a response
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
 
-module.exports = { scrapeAmazon }; // Exporting the scrapeAmazon function for external use
+// Starting the server and listening on the specified port
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`); // Logging a message when the server starts
+});

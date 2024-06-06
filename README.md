@@ -29,7 +29,7 @@ This project allows scraping Amazon product listings from the first page of sear
 ## Usage
 
 1. Enter the search keyword in the input field.
-2. Click the "Scrape" button.
+2. Click the "Search" button.
 3. The results will be displayed on the page.
 
 ## Dependencies

@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node backend/server.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "Davimf7221",
+  "license": "MIT",
+  "description": "A simple project to scrape Amazon product listings.",
   "dependencies": {
     "axios": "^1.7.2",
     "express": "^4.19.2",

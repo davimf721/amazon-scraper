@@ -8,7 +8,7 @@ This project allows scraping Amazon product listings from the first page of sear
 
 1. Clone the repository:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/davimf721/amazon-scraper.git
     cd amazon-scraper
     ```
 
